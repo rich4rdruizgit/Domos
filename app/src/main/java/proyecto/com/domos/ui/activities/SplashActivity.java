@@ -8,6 +8,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import proyecto.com.domos.R;
+import proyecto.com.domos.ui.activities.login.LoginActivity;
 
 public class SplashActivity extends AppCompatActivity {
 

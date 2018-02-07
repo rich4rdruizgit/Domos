@@ -1,4 +1,4 @@
-package proyecto.com.domos.ui.activities;
+package proyecto.com.domos.ui.activities.login;
 
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
