@@ -2,6 +2,9 @@ package proyecto.com.domos;
 
 import android.app.Application;
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+
 import proyecto.com.domos.data.DB;
 
 /**
@@ -15,5 +18,8 @@ public class App extends Application
         super.onCreate();
         //inicializamos el singleton de la Base de datos
         DB.init(this);
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
     }
 }

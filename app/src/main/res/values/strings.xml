@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Domos</string>
+
+    <string name="facebook_app_id">2065317220420467</string>
+    <string name="fb_login_protocol_scheme">fb2065317220420467</string>
 </resources>
