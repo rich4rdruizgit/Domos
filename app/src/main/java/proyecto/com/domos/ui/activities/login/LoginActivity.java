@@ -1,20 +1,20 @@
 package proyecto.com.domos.ui.activities.login;
 
 import android.content.Intent;
-
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.security.MessageDigest;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+
 import java.util.Arrays;
 
 import proyecto.com.domos.R;
@@ -27,16 +27,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -52,13 +42,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        getSupportActionBar().hide();
 
-
-
-        mEditEmail = findViewById(R.id.edt_login_email);
-        mEditPassword = findViewById(R.id.edt_login_password);
-        mBtnLogin = findViewById(R.id.btn_login);
+        mEditEmail = findViewById(R.id.txtEmail);
+        mEditPassword = findViewById(R.id.txtPassword);
+        mBtnLogin = findViewById(R.id.btnLogin);
         mBtnLogin.setOnClickListener(this);
 
         retrofit = new Retrofit.Builder().baseUrl(RetroFitApi.BASE_URL)
@@ -68,7 +55,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         //Logica login fb
         callbackManager = CallbackManager.Factory.create();
-        loginButtonfb = findViewById(R.id.login_button_facebook);
+        loginButtonfb = findViewById(R.id.btnFacebook);
 
         //Permiso para el correo
         loginButtonfb.setReadPermissions(Arrays.asList("email"));
@@ -91,15 +78,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
 
 
-
-
-
-
     }
 
     private void goMainScreen() {
         Intent intent = new Intent(this, RegisterActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                 Intent.FLAG_ACTIVITY_CLEAR_TASK |
                 Intent.FLAG_ACTIVITY_NEW_TASK
         );
@@ -109,42 +92,43 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btn_login:
-
-                String username = mEditEmail.getText().toString();
-                String password = mEditPassword.getText().toString();
-                Call<User> userCall = retroFitApi.login(new Login(username, password));
-                userCall.enqueue(new Callback<User>() {
-                    @Override
-                    public void onResponse(Call<User> call, Response<User> response) {
-                        Log.d(TAG, "retrofit:" + response.body().getResult());
-                        Log.d(TAG, "retrofit:" + response.body().getSid());
-                        Log.d(TAG, "retrofit:" + response.body().getUserDatos().toString());
-                        if (response.body().getResult().toString().equals("0")) {
-                            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-                            Toast.makeText(LoginActivity.this, "Login exitoso", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(LoginActivity.this, "Error Intenta de Nuevo", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<User> call, Throwable t) {
-                        Toast.makeText(LoginActivity.this, "Problemas de conexion", Toast.LENGTH_SHORT).show();
-                        Log.d(TAG, t.getMessage());
-                        t.fillInStackTrace();
-                    }
-                });
+            case R.id.btnLogin:
+                login();
                 break;
         }
     }
 
+    private void login() {
+        String username = mEditEmail.getText().toString();
+        String password = mEditPassword.getText().toString();
+        Call<User> userCall = retroFitApi.login(new Login(username, password));
+        userCall.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                Log.d(TAG, "retrofit:" + response.body().getResult());
+                Log.d(TAG, "retrofit:" + response.body().getSid());
+                Log.d(TAG, "retrofit:" + response.body().getUserDatos().toString());
+                if (response.body().getResult().toString().equals("0")) {
+                    startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+                    finish();
+                    Toast.makeText(LoginActivity.this, "Login exitoso", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(LoginActivity.this, "Error Intenta de Nuevo", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+
+            }
+
+        });
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
     }
-
 }

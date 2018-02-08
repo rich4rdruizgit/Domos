@@ -3,4 +3,11 @@
 
     <string name="facebook_app_id">2065317220420467</string>
     <string name="fb_login_protocol_scheme">fb2065317220420467</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="btn_login">Login</string>
+    <string name="content_description">Image</string>
+    <string name="lbl_sign_in">Sign in</string>
+    <string name="lbl_forget_password">¿Forgot password?</string>
+    <string name="lbl_continue">Continue without authentication ></string>
 </resources>

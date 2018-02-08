@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Domos</string>
+    <string name="email_hint">Correo electrónico</string>
+    <string name="password_hint">Contraseña</string>
+    <string name="btn_login">Iniciar Sesión</string>
+    <string name="content_description">Imagen</string>
+    <string name="lbl_sign_in">Registrarse</string>
+    <string name="lbl_forget_password">¿Olvidó la constraseña?</string>
+    <string name="lbl_continue">Continue sin atenticacion ></string>
+
+</resources>
