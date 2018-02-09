@@ -1,36 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="proyecto.com.domos.ui.activities.MainActivity">
+    android:orientation="vertical"
+    tools:context="proyecto.com.domos.ui.activities.menu.MainActivity">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/container_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.9"
+        android:orientation="vertical"></LinearLayout>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="148dp"
-        android:text="Hello World!"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        >
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="76dp"
-        android:text="Button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.0" />
+        <android.support.design.widget.BottomNavigationView
+            android:id="@+id/navigationMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:itemBackground="@color/colorPrimary"
+            app:itemIconTint="#ffffff"
+            app:itemTextColor="#ffffff"
+            app:menu="@menu/menu_navigation">
 
-</android.support.constraint.ConstraintLayout>
+        </android.support.design.widget.BottomNavigationView>
+    </android.support.design.widget.CoordinatorLayout>
+
+
+</LinearLayout>

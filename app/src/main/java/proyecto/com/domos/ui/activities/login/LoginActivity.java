@@ -23,6 +23,7 @@ import proyecto.com.domos.net.api.RetroFitApi;
 import proyecto.com.domos.net.models.Login;
 import proyecto.com.domos.net.models.User;
 import proyecto.com.domos.ui.activities.RegisterActivity;
+import proyecto.com.domos.ui.activities.menu.MainActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -83,7 +84,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void goMainScreen() {
-        Intent intent = new Intent(this, RegisterActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                 Intent.FLAG_ACTIVITY_CLEAR_TASK |
                 Intent.FLAG_ACTIVITY_NEW_TASK
@@ -111,8 +112,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Log.d(TAG, "retrofit:" + response.body().getSid());
                 Log.d(TAG, "retrofit:" + response.body().getUserDatos().toString());
                 if (response.body().getResult().toString().equals("0")) {
-                    startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-                    finish();
+                    goMainScreen();
                     Toast.makeText(LoginActivity.this, "Login exitoso", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(LoginActivity.this, "Error Intenta de Nuevo", Toast.LENGTH_SHORT).show();

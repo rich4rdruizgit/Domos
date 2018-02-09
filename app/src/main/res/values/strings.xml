@@ -10,4 +10,11 @@
     <string name="lbl_sign_in">Sign in</string>
     <string name="lbl_forget_password">¿Forgot password?</string>
     <string name="lbl_continue">Continue without authentication ></string>
+    <string name="txtdomicilios">Domicilios</string>
+    <string name="txtcompras">Compras</string>
+    <string name="txtfeedback">Notificaciones</string>
+    <string name="txtprofile">Perfil</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navDelivery"
+        android:icon="@drawable/ic_delivery"
+        android:title="@string/txtdomicilios"
+        >
+    </item>
+
+    <item
+        android:id="@+id/navShop"
+        android:icon="@drawable/ic_shopping"
+        android:title="@string/txtcompras"
+        >
+    </item>
+
+    <item
+        android:id="@+id/navFeedback"
+        android:icon="@drawable/ic_feedback"
+        android:title="@string/txtfeedback"
+        >
+    </item>
+
+    <item
+        android:id="@+id/navProfile"
+        android:icon="@drawable/ic_profile"
+        android:title="@string/txtprofile"
+        >
+    </item>
+</menu>
