@@ -22,6 +22,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_register);
 
         mBtnLogout = findViewById(R.id.btn_logout);
+        mBtnLogout.setOnClickListener(this);
 
         if(AccessToken.getCurrentAccessToken() == null){
             goLoginScreen();

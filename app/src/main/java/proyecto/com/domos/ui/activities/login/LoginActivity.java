@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -37,6 +38,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button mBtnLogin;
     private CallbackManager callbackManager;
     private LoginButton loginButtonfb;
+    boolean loggedIn = AccessToken.getCurrentAccessToken() == null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
