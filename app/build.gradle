@@ -8,6 +8,7 @@ android {
     }
 
     defaultConfig {
+        vectorDrawables.useSupportLibrary = true
         applicationId "proyecto.com.domos"
         minSdkVersion 19
         targetSdkVersion 27

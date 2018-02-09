@@ -8,5 +8,26 @@
     <string name="lbl_sign_in">Registrarse</string>
     <string name="lbl_forget_password">¿Olvidó la constraseña?</string>
     <string name="lbl_continue">Continue sin atenticacion ></string>
+    <string name="lbl_full_name">Nombres y apellidos</string>
+    <string name="identification_type_hint">Tipo de documento</string>
+    <string name="document_number_hint">Numerdo documento</string>
+    <string name="cell_phone_hint">Celular</string>
+    <string name="lbl_terms_conditions">Acepto los términos y condiciones.</string>
+
+    <string name="txtdomicilios">Domicilios</string>
+    <string name="txtcompras">Compras</string>
+    <string name="txtfeedback">Notificaciones</string>
+    <string name="txtprofile">Perfil</string>
+
+    <!-- errors messages form-->
+    <string name="err_select_identification_type">Seleccione un tipo de identificación.</string>
+    <string name="err_type_identification_number">Digite número de documento</string>
+    <string name="err_type_name">Digite nombre</string>
+    <string name="err_type_email">Digite correo electrónico</string>
+    <string name="err_invalid_email_format">Formato de correo electrónico invalido</string>
+    <string name="err_type_password">Digite una contraseña</string>
+    <string name="err_type_cel_number">Digite número de celular</string>
+    <string name="err_invalid_cell_phone_number">Número de celular invalido</string>
+    <string name="err_accept_terms_and_conditions">Acepte términos y condiciones.</string>
 
 </resources>
