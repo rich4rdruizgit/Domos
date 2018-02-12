@@ -1,4 +1,4 @@
-package proyecto.com.domos.ui.activities.menu;
+package proyecto.com.domos.ui.activities.main;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

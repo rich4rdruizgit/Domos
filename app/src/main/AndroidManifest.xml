@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".App"
@@ -17,10 +19,16 @@
         <meta-data android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
 
-        <activity android:name=".ui.activities.menu.MainActivity"
+
+        <activity android:name=".ui.activities.SplashActivity"
             android:theme="@style/AppTheme.NoTitle"
-            ></activity>
-        <activity android:name=".ui.activities.SplashActivity">
+            >
+
+        </activity>
+
+        <activity android:name=".ui.activities.main.MainActivity"
+            android:theme="@style/AppTheme.NoTitle"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,7 +42,10 @@
             android:screenOrientation="portrait"
             />
 
-        <activity android:name=".ui.activities.RegisterActivity"></activity>
+        <activity android:name=".ui.activities.register.RegisterActivity"
+            android:theme="@style/AppTheme.NoTitle"
+            android:screenOrientation="portrait"
+            />
 
         <activity android:name="com.facebook.FacebookActivity"
             android:configChanges=

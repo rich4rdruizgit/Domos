@@ -1,35 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/coordinatorlayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="proyecto.com.domos.ui.activities.menu.MainActivity">
+    tools:context="proyecto.com.domos.ui.activities.main.MainActivity">
 
     <LinearLayout
         android:id="@+id/container_fragment"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.9"
-        android:orientation="vertical"></LinearLayout>
+        android:layout_height="match_parent"
+        android:orientation="vertical" />
 
-    <android.support.design.widget.CoordinatorLayout
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigationMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
-
-        <android.support.design.widget.BottomNavigationView
-            android:id="@+id/navigationMenu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:itemBackground="@color/colorPrimary"
-            app:itemIconTint="#ffffff"
-            app:itemTextColor="#ffffff"
-            app:menu="@menu/menu_navigation">
-
-        </android.support.design.widget.BottomNavigationView>
-    </android.support.design.widget.CoordinatorLayout>
-
-
-</LinearLayout>
+        app:itemBackground="@color/colorPrimary"
+        app:itemIconTint="#ffffff"
+        app:itemTextColor="#ffffff"
+        app:menu="@menu/menu_navigation"
+        app:layout_behavior="proyecto.com.domos.ui.activities.main.ScrollNavigationBottomBehavior"
+        android:layout_gravity="bottom"
+        />
+</android.support.design.widget.CoordinatorLayout>

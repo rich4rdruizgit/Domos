@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -22,8 +23,8 @@ import proyecto.com.domos.R;
 import proyecto.com.domos.net.api.RetroFitApi;
 import proyecto.com.domos.net.models.Login;
 import proyecto.com.domos.net.models.User;
-import proyecto.com.domos.ui.activities.RegisterActivity;
-import proyecto.com.domos.ui.activities.menu.MainActivity;
+import proyecto.com.domos.ui.activities.register.RegisterActivity;
+import proyecto.com.domos.ui.activities.main.MainActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,6 +38,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private RetroFitApi retroFitApi;
     private EditText mEditEmail, mEditPassword;
     private Button mBtnLogin;
+    private TextView mBtnSignIn;
     private CallbackManager callbackManager;
     private LoginButton loginButtonfb;
     boolean loggedIn = AccessToken.getCurrentAccessToken() == null;
@@ -49,7 +51,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mEditEmail = findViewById(R.id.txtEmail);
         mEditPassword = findViewById(R.id.txtPassword);
         mBtnLogin = findViewById(R.id.btnLogin);
+        mBtnSignIn = findViewById(R.id.txtSignIn);
         mBtnLogin.setOnClickListener(this);
+        mBtnSignIn.setOnClickListener(this);
 
         retrofit = new Retrofit.Builder().baseUrl(RetroFitApi.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create()).build();
@@ -98,6 +102,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.btnLogin:
                 login();
                 break;
+            case R.id.txtSignIn:
+                goToSignIn();
+                break;
         }
     }
 
@@ -126,6 +133,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
 
         });
+    }
+
+    /**
+     * Metodo que lanza el activity de registro de un usuario
+     */
+    private void goToSignIn()
+    {
+        Intent intentSignIn = new Intent(this,RegisterActivity.class);
+        startActivity(intentSignIn);
     }
 
     @Override
