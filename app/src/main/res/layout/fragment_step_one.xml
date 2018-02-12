@@ -1,0 +1,40 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context="proyecto.com.domos.ui.fragments.delivery.StepOneFragment">
+
+    <TextView
+        android:gravity="center"
+        android:text="Selecciona el tipo de vehiculo"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <RadioGroup
+        android:id="@+id/radios"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:orientation="vertical" >
+
+        <RadioButton
+            android:id="@+id/first"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:drawablePadding="30dp"
+            android:text="Moto"
+            android:textSize="40sp"
+            android:layout_marginLeft="20dp" />
+
+        <RadioButton
+            android:id="@+id/second"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Carro"
+            android:textSize="40sp"
+            android:layout_marginLeft="20dp" />
+    </RadioGroup>
+
+</LinearLayout>
