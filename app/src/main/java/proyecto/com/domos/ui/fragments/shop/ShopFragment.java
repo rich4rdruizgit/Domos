@@ -1,37 +1,35 @@
 package proyecto.com.domos.ui.fragments.shop;
 
 
-import android.Manifest;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
 import proyecto.com.domos.R;
+import proyecto.com.domos.ui.activities.main.MainActivity;
+import proyecto.com.domos.ui.adapters.shop.ShopAdapter;
 import proyecto.com.domos.util.AudioRecordHandler;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ShopFragment extends Fragment implements View.OnClickListener {
+public class ShopFragment extends Fragment implements View.OnClickListener, View.OnFocusChangeListener, View.OnTouchListener {
 
 
-    private static final int IDLE = 0;
-    private static final int RECORDING = 1;
-    private static final String TAG = ShopFragment.class.getSimpleName();
-
-
-    private ImageView mBtnRecord;
-    private EditText mPath;
-
-    private int status = IDLE;
 
     private AudioRecordHandler mAudioRecordInstance;
+    private ImageView btnShowBarBottom;
+    private EditText txtMessage;
+    private RecyclerView rcView;
+    private ShopAdapter shopAdapter;
 
 
     public ShopFragment() {
@@ -44,66 +42,65 @@ public class ShopFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_shop, container, false);
-        mBtnRecord = view.findViewById(R.id.btn_record);
-        mPath = view.findViewById(R.id.et_path);
 
-        mBtnRecord.setOnClickListener(this);
+        //link views
+        btnShowBarBottom = view.findViewById(R.id.btnShowBarBottom);
+        txtMessage = view.findViewById(R.id.txtMessage);
+        rcView = view.findViewById(R.id.rcView);
+
+
+        //set listeners
+        btnShowBarBottom.setOnClickListener(this);
+        txtMessage.setOnFocusChangeListener(this);
+        rcView.setOnTouchListener(this);
+
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
+        linearLayoutManager.setStackFromEnd(true);
+        rcView.setLayoutManager(linearLayoutManager);
+        shopAdapter = new ShopAdapter();
+        rcView.setAdapter(shopAdapter);
         return view;
     }
+
 
     @Override
     public void onClick(View view) {
         switch (view.getId())
         {
-            case R.id.btn_record:
-                onRecordClick();
+            case R.id.btnShowBarBottom:
+                showBarBottom();
                 break;
+
         }
     }
 
-
-    private void onRecordClick() {
-        if (status == IDLE) {
-            doActionRecord();
-            status = RECORDING;
-            mBtnRecord.setImageResource(R.mipmap.ic_record_pause);
-        } else if (status == RECORDING) {
-            doActionStopRecord();
-            status = IDLE;
-            mBtnRecord.setImageResource(R.mipmap.ic_record_start);
-        }
+    private void showBarBottom()
+    {
+        ((MainActivity)getActivity()).showBarBottom(true);
     }
 
-    private void doActionRecord() {
-        int permissionCheck = ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.RECORD_AUDIO);
-        Log.i(TAG, "i =" + permissionCheck);
-        //开始录音
-        mAudioRecordInstance = new AudioRecordHandler("/sdcard/hello.mp3",
-                new AudioRecordHandler.ProgressListener() {
-                    @Override
-                    public boolean reportProgress(double duration) {
-                        Log.i(TAG, "duration = " + duration);
-                        return true;
-                    }
-                });
-        Thread th = new Thread(mAudioRecordInstance);
-        th.start();
-        mAudioRecordInstance.setRecording(true);
+    private void hideBarBottom(){
+        ((MainActivity)getActivity()).showBarBottom(false);
+    }
+
+    @Override
+    public void onFocusChange(View view, boolean b) {
+        if(b)
+        {
+            hideBarBottom();
+        }
     }
 
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mAudioRecordInstance != null) {
-            mAudioRecordInstance.setRecording(false);
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        switch (view.getId())
+        {
+            case R.id.rcView:
+                hideBarBottom();
+                break;
         }
-    }
-
-    private void doActionStopRecord() {
-        if (mAudioRecordInstance != null) {
-            mAudioRecordInstance.setRecording(false);
-        }
+        return  false;
     }
 }

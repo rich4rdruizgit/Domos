@@ -30,4 +30,8 @@
     <string name="err_invalid_cell_phone_number">Número de celular invalido</string>
     <string name="err_accept_terms_and_conditions">Acepte términos y condiciones.</string>
 
+    <!--etiquetas para el fragment de compras-->
+    <string name="message_hint">Mensaje</string>
+    <string name="Make_purchase">Realizar compra</string>
+
 </resources>

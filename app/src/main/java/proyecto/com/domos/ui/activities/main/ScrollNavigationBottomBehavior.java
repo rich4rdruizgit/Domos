@@ -33,6 +33,7 @@ public final class ScrollNavigationBottomBehavior extends VerticalNavigationBott
     private int mSnackbarHeight = -1;
     private boolean scrollingEnabled = true;
     private boolean hideAlongSnackbar = false;
+    public static boolean active = true;
     int[] attrsArray = new int[] {
             android.R.attr.id };
     public ScrollNavigationBottomBehavior() {
@@ -74,6 +75,7 @@ public final class ScrollNavigationBottomBehavior extends VerticalNavigationBott
     }
 
     private void updateScrollingForSnackbar(View dependency, BottomNavigationView child, boolean enabled) {
+
         if (!isTablet && dependency instanceof Snackbar.SnackbarLayout) {
             scrollingEnabled = enabled;
             if (!hideAlongSnackbar && ViewCompat.getTranslationY(child) != 0) {
@@ -120,14 +122,18 @@ public final class ScrollNavigationBottomBehavior extends VerticalNavigationBott
     }
 
     private void handleDirection(BottomNavigationView child, @ScrollDirection int scrollDirection) {
-        if (!scrollingEnabled) return;
-        if (scrollDirection == ScrollDirection.SCROLL_DIRECTION_DOWN && hidden) {
-            hidden = false;
-            animateOffset(child, 0);
-        } else if (scrollDirection == ScrollDirection.SCROLL_DIRECTION_UP && !hidden) {
-            hidden = true;
-            animateOffset(child, child.getHeight());
+        if(active)
+        {
+            if (!scrollingEnabled) return;
+            if (scrollDirection == ScrollDirection.SCROLL_DIRECTION_DOWN && hidden) {
+                hidden = false;
+                animateOffset(child, 0);
+            } else if (scrollDirection == ScrollDirection.SCROLL_DIRECTION_UP && !hidden) {
+                hidden = true;
+                animateOffset(child, child.getHeight());
+            }
         }
+
     }
 
     @Override

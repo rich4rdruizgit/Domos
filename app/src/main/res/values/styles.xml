@@ -13,4 +13,8 @@
         <item name="windowActionBar">false</item>
     </style>
 
+    <style name="MySeekBarTheme" parent="Widget.AppCompat.SeekBar" >
+        <item name="colorAccent">@color/black</item>
+    </style>
+
 </resources>
