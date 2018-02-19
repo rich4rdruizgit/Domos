@@ -33,5 +33,16 @@
     <!--etiquetas para el fragment de compras-->
     <string name="message_hint">Mensaje</string>
     <string name="Make_purchase">Realizar compra</string>
+    <string name="tittle_delete_itemShop_dialog">Eliminar</string>
+    <string name="message_delete_itemShop_dialog">¿Seguro que quieres eliminar este item?</string>
+    <string name="btn_positive_dialog_delete">Eliminar</string>
+    <string name="btn_positive_dialog_ok">Aceptar</string>
+    <string name="btn_negative_dialog">cancelar</string>
+    <string name="abbrev_seconds_lbl">Segs</string>
+    <string name="tittle_request_permissions">Permisos</string>
+    <string name="all_permissions_request">Todos los permisos son obligatorios.</string>
+    <string name="go_settings">Ir a configuración y habilitar permisos</string>
+
+
 
 </resources>

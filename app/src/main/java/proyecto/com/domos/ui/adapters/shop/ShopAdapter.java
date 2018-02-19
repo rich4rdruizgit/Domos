@@ -1,15 +1,17 @@
 package proyecto.com.domos.ui.adapters.shop;
 
+import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import proyecto.com.domos.R;
+import proyecto.com.domos.data.model.ItemShop;
+import proyecto.com.domos.databinding.TemplateAudioMessageBinding;
+import proyecto.com.domos.databinding.TemplateTextMessageBinding;
 
 /**
  * Created by aranda on 16/02/18.
@@ -17,30 +19,20 @@ import proyecto.com.domos.R;
 
 public class ShopAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
-    List<String> list = new ArrayList();
+    List<ItemShop> list;
 
-    public ShopAdapter()
+    public interface ShopAdapterCallback
     {
-        list.add("holaholaholaho");
+        void deleteItem(ItemShop itemShop);
+        void playAudio(View itemView,ItemShop itemShop);
+    }
 
-        list.add("holaholaholaholaholaholaholaholaholaholaholaholaholaholaholahola hola hola hola hola hola hola hola hola hola hola hola hola hola holag");
-        list.add("holaholaholaholaholaholaholaholaholaholaholaholaholaholaholahola hola hola hola hola hola hola hola hola hola hola hola hola hola holah");
-        list.add("holaholaholaholaholaholaholaholaholaholaholaholaholaholaholahola hola hola hola hola hola hola hola hola hola hola hola hola hola holam");
-        list.add("holaholaholaholaholaholaholaholaholaholaholaholaholaholaholahola hola hola hola hola hola hola hola hola hola hola hola hola hola holap");
-        list.add("holaholaholaholaholaholaholaholaholaholaholaholaholaholaholahola hola hola hola hola hola hola hola hola hola hola hola hola hola holap");
-        list.add("holaholaholaholaholaholaholaholaholaholaholaholaholaholaholahola hola holaola hola hola hola holap");
-        list.add("holaholaholaholaholaholaholaholaholaholaholaholaholaholaholahola hola hola hola hola hola hola hola hola hola hola hola hola hola holap");
-        list.add("holaholaholaholaholaholaholaholaholaholaholaholaholaholaholahola hola hola hola hola hola hola hola hola hola hola hola hola hola holap");
-        list.add("holaholaholaholaholaholaholaholaholaholaholaholaholaholaholahola hola hola hola hola hola hola hola hola hola hola hola hola hola holap");
-        list.add("holaholaholaholaholaholaholaholaholaholaholaholaholaholaholahola hola hola hola hola hola hola hola hola hola hola hola hola hola holap");
-        list.add("holaholaholaholaholaholaholaholaholaholaholaholaholaholaholahola hola hola hola hola hola hola hola hola hola hola hola hola hola holap");
-        list.add("holaholaholaholaholaholaholaholaholaholaholaholaholaholaholahola holla hola hola hola hola hola hola hola hola hola holap");
-        list.add("holaholaholaholaholaholaholaholaholaholaholaholaholaholaholahola hola hola holaa hola hola hola hola hola hola holap");
-        list.add("holaholaholaholaholaholaholaholaholaholaholaholaholaholaholahola hola hola hola hola hola hola hola hola hola hola hola hola hola holap");
-        list.add("holaholaholaholaholaholaholaholaholaholaholaholaholaholaholahola hola hola hola  hola hola hola hola hola hola hola hola hola holap");
+    ShopAdapterCallback callback;
 
-
-
+    public ShopAdapter(List<ItemShop>data,ShopAdapterCallback callback)
+    {
+        list = data;
+        this.callback = callback;
     }
 
     @Override
@@ -64,10 +56,10 @@ public class ShopAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         switch (holder.getItemViewType())
         {
             case 0:
-                ((TextViewHolader)holder).bind(list.get(position));
+                ((TextViewHolader)holder).bind(list.get(position),this);
                 break;
             case 1:
-                ((AudioViewHolader)holder).bind();
+                ((AudioViewHolader)holder).bind(list.get(position),this);
                 break;
         }
     }
@@ -79,42 +71,72 @@ public class ShopAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     @Override
     public int getItemViewType(int position) {
-        int mod = position % 2;
-        if(mod == 0)
+
+        return list.get(position).getType();
+    }
+
+    public void addItems(List<ItemShop>itemShops) {
+        this.list = itemShops;
+        notifyDataSetChanged();
+    }
+
+    public void deleteItem(ItemShop itemShop)
+    {
+        if(callback!=null)
         {
-            return 0;
+            callback.deleteItem(itemShop);
         }
-        return 1;
     }
 
     public static class AudioViewHolader extends RecyclerView.ViewHolder
     {
         View itemView;
+        TemplateAudioMessageBinding audioDataBinding;
 
         public AudioViewHolader(View itemView) {
             super(itemView);
+            audioDataBinding = DataBindingUtil.bind(itemView);
             this.itemView = itemView;
         }
 
-        public void bind()
+        public void bind(ItemShop itemShop ,ShopAdapter handler)
         {
-            TextView textView = itemView.findViewById(R.id.txtDuration);
-            textView.setText("11:00");
+            audioDataBinding.setHandler(handler);
+            audioDataBinding.setItemAudio(itemShop);
+            audioDataBinding.setItemView(itemView);
+            TextView durTextView = itemView.findViewById(R.id.txtDuration);
+            if(itemShop.getDuration()<10)
+                durTextView.setText("00:0"+itemShop.getDuration());
+            else
+                durTextView.setText("00:"+itemShop.getDuration());
+
+
+
         }
     }
 
     public static class TextViewHolader extends RecyclerView.ViewHolder
     {
         View itemView;
+        TemplateTextMessageBinding textDataBinding;
 
         public TextViewHolader(View itemView) {
             super(itemView);
+            textDataBinding = DataBindingUtil.bind(itemView);
             this.itemView = itemView;
         }
-        public void bind(String data)
+        public void bind(ItemShop itemShop,ShopAdapter handler)
         {
-            TextView textView = itemView.findViewById(R.id.txtMessage);
-            textView.setText(data);
+            textDataBinding.setHandler(handler);
+            textDataBinding.setItemText(itemShop);
+        }
+    }
+
+    public void playAudio(View itemView,ItemShop itemShop)
+    {
+        if(callback!=null)
+        {
+            callback.playAudio(itemView,itemShop);
         }
     }
 }
