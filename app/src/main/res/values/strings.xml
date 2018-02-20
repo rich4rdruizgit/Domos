@@ -51,4 +51,5 @@
     <string name="tittle_request_permissions">Permissions</string>
     <string name="all_permissions_request">All permissions are required</string>
     <string name="go_settings">Go to settings and enable permissions</string>
+    <string name="tittle_audio_dialog">Audio</string>
 </resources>

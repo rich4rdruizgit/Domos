@@ -13,7 +13,6 @@ import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -26,8 +25,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,7 +73,8 @@ public class ShopFragment extends Fragment implements View.OnClickListener, View
     private TextView txtDurationRecord;
     private ImageView imgRecord;
     private ShopAdapter shopAdapter;
-    private FloatingActionButton floatingActionButton;
+    private FrameLayout floatingActionButton;
+    private ImageButton iconFloatingActionButton;
     private boolean showingMic = true;
     private ShopViewModel viewModel;
     private AlertDialog dialog;
@@ -79,6 +82,8 @@ public class ShopFragment extends Fragment implements View.OnClickListener, View
     private boolean actionUp = true;
     private MediaPlayer mediaPlayer;
     private int durationSecs;
+    private int durationSecsDec;
+    private int durationSecsTotal;
     /**
      * Manejador contador tiempo
      */
@@ -120,6 +125,7 @@ public class ShopFragment extends Fragment implements View.OnClickListener, View
         txtMessage = view.findViewById(R.id.txtMessage);
         rcView = view.findViewById(R.id.rcView);
         floatingActionButton = view.findViewById(R.id.floatingActionButton);
+        iconFloatingActionButton = view.findViewById(R.id.iconFloatingActionButton);
         lyRecord = view.findViewById(R.id.lyRecord);
         imgRecord = view.findViewById(R.id.imgRecord);
         txtDurationRecord = view.findViewById(R.id.txtDurationRecord);
@@ -128,8 +134,8 @@ public class ShopFragment extends Fragment implements View.OnClickListener, View
         btnShowBarBottom.setOnClickListener(this);
         txtMessage.setOnTouchListener(this);
         rcView.setOnTouchListener(this);
-        floatingActionButton.setOnClickListener(this);
-        floatingActionButton.setOnTouchListener(this);
+        iconFloatingActionButton.setOnClickListener(this);
+        iconFloatingActionButton.setOnTouchListener(this);
 
         txtMessage.addTextChangedListener(new TextWatcher(){
 
@@ -142,12 +148,12 @@ public class ShopFragment extends Fragment implements View.OnClickListener, View
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(s.length()>0 && showingMic)
                 {
-                    floatingActionButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_send));
+                    iconFloatingActionButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_send));
                     showingMic = false;
                 }
                 else if(s.length()==0 && !showingMic)
                 {
-                    floatingActionButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_mic));
+                    iconFloatingActionButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_mic));
                     showingMic = true;
                 }
             }
@@ -176,6 +182,17 @@ public class ShopFragment extends Fragment implements View.OnClickListener, View
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        if(dialog!=null && dialog.isShowing())
+        {
+            dialog.dismiss();
+            resetRecordView();
+            resetPlayAudio();
+        }
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId())
         {
@@ -183,7 +200,7 @@ public class ShopFragment extends Fragment implements View.OnClickListener, View
                 showBarBottom();
                 break;
 
-            case R.id.floatingActionButton:
+            case R.id.iconFloatingActionButton:
                 saveMessage();
                 break;
         }
@@ -208,7 +225,7 @@ public class ShopFragment extends Fragment implements View.OnClickListener, View
             case R.id.txtMessage:
                 hideBarBottom();
                 break;
-            case R.id.floatingActionButton:
+            case R.id.iconFloatingActionButton:
                 if(showingMic)
                 {
                     onTouchFloatingActionButtonMic(motionEvent);
@@ -231,49 +248,152 @@ public class ShopFragment extends Fragment implements View.OnClickListener, View
 
     @Override
     public void deleteItem(final ItemShop itemShop) {
+        dialog = HelperUtil.createAlertDialog(getActivity(),
+                R.string.tittle_delete_itemShop_dialog,
+                R.string.message_delete_itemShop_dialog,
+                R.string.btn_positive_dialog_delete,
+                R.string.btn_negative_dialog,
+                new DialogInterface.OnClickListener(){
 
-        if(checkStoragePermissions())
-        {
-            dialog = HelperUtil.createAlertDialog(getActivity(),
-                    R.string.tittle_delete_itemShop_dialog,
-                    R.string.message_delete_itemShop_dialog,
-                    R.string.btn_positive_dialog_delete,
-                    R.string.btn_negative_dialog,
-                    new DialogInterface.OnClickListener(){
-
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            if(itemShop.getType()==1)
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if(itemShop.getType()==1)
+                        {
+                            if(checkStoragePermissions())
                             {
                                 File audio = new File(itemShop.getSrcAudio());
                                 if(audio.exists())
                                 {
                                     audio.delete();
                                 }
+                                viewModel.deleteItem(itemShop);
                             }
+                        }
+                        else
+                        {
                             viewModel.deleteItem(itemShop);
                         }
-                    },new DialogInterface.OnClickListener(){
+                    }
+                },new DialogInterface.OnClickListener(){
 
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialog.dismiss();
-                        }
-                    });
-            dialog.show();
-        }
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialog.dismiss();
+                    }
+                });
+        dialog.show();
+
     }
 
     @Override
-    public void playAudio(View itemView, ItemShop itemShop) {
-        /*mediaPlayer = new MediaPlayer();
-        try {
-            mediaPlayer.setDataSource(itemShop.getSrcAudio());
-            mediaPlayer.prepare();
-            mediaPlayer.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
+    public void playAudio(ItemShop itemShop) {
+
+        if(checkStoragePermissions())
+        {
+            dialog = HelperUtil.createAlertDialogWithViewwithoutButtons(getActivity(),
+                    R.layout.template_audio_play,R.string.tittle_audio_dialog);
+            dialog.show();
+            ImageView btnPlayAudio = dialog.findViewById(R.id.btnPlayAudio);
+            btnPlayAudio.setVisibility(View.INVISIBLE);
+            ImageView btnPauseAudio = dialog.findViewById(R.id.btnPauseAudio);
+            btnPauseAudio.setVisibility(View.VISIBLE);
+            btnPlayAudio.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    playAudioDialog();
+                }
+            });
+
+            btnPauseAudio.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    pauseAudioDialog();
+                }
+            });
+            mediaPlayer = new MediaPlayer();
+            try {
+                mediaPlayer.setDataSource(itemShop.getSrcAudio());
+                mediaPlayer.prepare();
+                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.seekTo(0);
+                        mediaPlayer.pause();
+                        SeekBar seekBar = dialog.findViewById(R.id.seekBar);
+                        seekBar.setProgress(mediaPlayer.getCurrentPosition());
+                        TextView txtDuration = dialog.findViewById(R.id.txtDurationAudio);
+                        txtDuration.setText("00 "+getActivity().getResources().getString(R.string.abbrev_seconds_lbl));
+                        ImageView btnPlayAudio = dialog.findViewById(R.id.btnPlayAudio);
+                        btnPlayAudio.setVisibility(View.VISIBLE);
+                        ImageView btnPauseAudio = dialog.findViewById(R.id.btnPauseAudio);
+                        btnPauseAudio.setVisibility(View.GONE);
+                        durationSecs = 0;
+                        customHandler.removeCallbacks(updateTimerPlayThread);
+                    }
+                });
+                durationSecs = 0;
+                durationSecsDec =  mediaPlayer.getDuration();
+                durationSecsTotal =  mediaPlayer.getDuration();
+                SeekBar seekBar = dialog.findViewById(R.id.seekBar);
+                seekBar.setMax(durationSecsTotal);
+                seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {}
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {}
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar)
+                    {
+                        int seekBarProgress = seekBar.getProgress();
+                        int seekBarProgressMod = (seekBarProgress % 1000);
+                        if(seekBarProgress>=1000)
+                        {
+                            if(seekBarProgressMod <500)
+                            {
+                                seekBarProgress = (seekBarProgress -seekBarProgressMod);
+                            }
+                            else
+                            {
+                                seekBarProgress = (seekBarProgress -seekBarProgressMod) + 1000;
+                            }
+                        }
+                        else
+                        {
+                            seekBarProgress = 0;
+                        }
+                        durationSecs = seekBarProgress;
+                        mediaPlayer.seekTo(durationSecs);
+                    }
+                });
+                mediaPlayer.start();
+                customHandler.postDelayed(updateTimerPlayThread, 0);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+    private void playAudioDialog()
+    {
+        ImageView btnPlayAudio = dialog.findViewById(R.id.btnPlayAudio);
+        btnPlayAudio.setVisibility(View.INVISIBLE);
+        ImageView btnPauseAudio = dialog.findViewById(R.id.btnPauseAudio);
+        btnPauseAudio.setVisibility(View.VISIBLE);
+        customHandler.postDelayed(updateTimerPlayThread, 0);
+        mediaPlayer.seekTo(durationSecs);
+        mediaPlayer.start();
+    }
+
+    private void pauseAudioDialog()
+    {
+        ImageView btnPlayAudio = dialog.findViewById(R.id.btnPlayAudio);
+        btnPlayAudio.setVisibility(View.VISIBLE);
+        ImageView btnPauseAudio = dialog.findViewById(R.id.btnPauseAudio);
+        btnPauseAudio.setVisibility(View.GONE);
+        mediaPlayer.pause();
+        customHandler.removeCallbacks(updateTimerPlayThread);
     }
 
     private void onTouchFloatingActionButtonMic(MotionEvent motionEvent)
@@ -365,14 +485,49 @@ public class ShopFragment extends Fragment implements View.OnClickListener, View
     };
 
     /**
+     * Hilo que controla y actualiza el tiempo en el timer del reproductor de audio
+     */
+    private Runnable updateTimerPlayThread = new Runnable() {
+
+        public void run() {
+            if(dialog!=null && dialog.isShowing())
+            {
+                if(durationSecs<=durationSecsTotal)
+                {
+                    SeekBar seekBar = dialog.findViewById(R.id.seekBar);
+                    seekBar.setProgress(durationSecs);
+                    TextView txtDuration = dialog.findViewById(R.id.txtDurationAudio);
+                    if(durationSecs % 1000 == 0)
+                    {
+                        float durationFloat = (float)durationSecs / 1000;
+                        int duration = (int)durationFloat;
+                        if(duration<10)
+                        {
+                            txtDuration.setText("0"+duration+" "+getActivity().getResources().getString(R.string.abbrev_seconds_lbl));
+                        }
+                        else
+                        {
+                            txtDuration.setText(duration+" "+getActivity().getResources().getString(R.string.abbrev_seconds_lbl));
+                        }
+                    }
+                    durationSecsDec -=100;
+                    durationSecs +=100;
+                    customHandler.postDelayed(this, 100);
+                }
+            }
+            else
+            {
+                resetPlayAudio();
+            }
+        }
+    };
+
+    /**
      * Metodo que inicia la grabación del audio en formato mp3
      * */
     public void record() {
         long starTime = System.currentTimeMillis();
-        while ((System.currentTimeMillis() - starTime)<1000)
-        {
-
-        }
+        while ((System.currentTimeMillis() - starTime)<1000){}
         if(!actionUp)
         {
             isRecording = true;
@@ -606,6 +761,18 @@ public class ShopFragment extends Fragment implements View.OnClickListener, View
     @Override
     public void onDestroy() {
         resetRecordView();
+        resetPlayAudio();
         super.onDestroy();
+    }
+
+    private void resetPlayAudio()
+    {
+        if(mediaPlayer!=null) {
+
+            customHandler.removeCallbacks(updateTimerPlayThread);
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
     }
 }

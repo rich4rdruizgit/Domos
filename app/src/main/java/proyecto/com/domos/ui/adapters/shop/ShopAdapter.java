@@ -13,9 +13,7 @@ import proyecto.com.domos.data.model.ItemShop;
 import proyecto.com.domos.databinding.TemplateAudioMessageBinding;
 import proyecto.com.domos.databinding.TemplateTextMessageBinding;
 
-/**
- * Created by aranda on 16/02/18.
- */
+
 
 public class ShopAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
@@ -24,7 +22,7 @@ public class ShopAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     public interface ShopAdapterCallback
     {
         void deleteItem(ItemShop itemShop);
-        void playAudio(View itemView,ItemShop itemShop);
+        void playAudio(ItemShop itemShop);
     }
 
     ShopAdapterCallback callback;
@@ -103,16 +101,12 @@ public class ShopAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         {
             audioDataBinding.setHandler(handler);
             audioDataBinding.setItemAudio(itemShop);
-            audioDataBinding.setItemView(itemView);
             TextView durTextView = itemView.findViewById(R.id.txtDuration);
             if(itemShop.getDuration()<10)
-                durTextView.setText("00:0"+itemShop.getDuration());
+                durTextView.setText("00:0"+itemShop.getDuration()+" "+itemView.getContext().getResources().getString(R.string.abbrev_seconds_lbl));
             else
-                durTextView.setText("00:"+itemShop.getDuration());
-
-
-
-        }
+                durTextView.setText("00:"+itemShop.getDuration()+" "+itemView.getContext().getResources().getString(R.string.abbrev_seconds_lbl));
+         }
     }
 
     public static class TextViewHolader extends RecyclerView.ViewHolder
@@ -132,11 +126,11 @@ public class ShopAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
     }
 
-    public void playAudio(View itemView,ItemShop itemShop)
+    public void playAudio(ItemShop itemShop)
     {
         if(callback!=null)
         {
-            callback.playAudio(itemView,itemShop);
+            callback.playAudio(itemShop);
         }
     }
 }

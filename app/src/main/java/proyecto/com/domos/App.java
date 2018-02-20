@@ -1,6 +1,7 @@
 package proyecto.com.domos;
 
 import android.app.Application;
+import android.support.v7.app.AppCompatDelegate;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
@@ -19,6 +20,7 @@ public class App extends Application
         //inicializamos el singleton de la Base de datos
         DB.init(this);
 
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
     }

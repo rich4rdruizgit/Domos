@@ -4,6 +4,7 @@ package proyecto.com.domos.util;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 
@@ -34,6 +35,16 @@ public class HelperUtil {
                 .setTitle(tittle);
         builder.setPositiveButton(btnPositiveLabel,btnPositiveListener);
         builder.setNegativeButton(btnNegativeLabel,btnNegativeListener);
+        AlertDialog dialog = builder.create();
+        return dialog;
+    }
+
+    public static AlertDialog createAlertDialogWithViewwithoutButtons(Context context,
+                                                                      @LayoutRes int view,
+                                                                      @StringRes int tittle)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(tittle).setView(view);
         AlertDialog dialog = builder.create();
         return dialog;
     }

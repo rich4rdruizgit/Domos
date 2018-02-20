@@ -42,6 +42,7 @@
     <string name="tittle_request_permissions">Permisos</string>
     <string name="all_permissions_request">Todos los permisos son obligatorios.</string>
     <string name="go_settings">Ir a configuración y habilitar permisos</string>
+    <string name="tittle_audio_dialog">Audio</string>
 
 
 
